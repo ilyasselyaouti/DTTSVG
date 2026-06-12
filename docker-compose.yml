@@ -1,0 +1,18 @@
+services:
+  dttsvg_frontend:
+    container_name: dttsvg_output
+    image: toasterlint/php-apache-mysql
+    restart: unless-stopped
+    volumes:
+      - ./output:/var/www/html
+    ports:
+      - "3000:80"
+    
+  dttsvg_backend:
+    build: .
+    ports:
+      - "1240:5000"
+    volumes:
+      - ./output:/app/output
+      - ./app.py:/app/app.py
+    restart: unless-stopped
