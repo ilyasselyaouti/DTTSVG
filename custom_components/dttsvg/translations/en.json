@@ -1,0 +1,132 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "TTS engine",
+        "description": "Choose the Text-To-Speech engine used to generate the video. All TTS engines configured in Home Assistant are available.",
+        "data": {
+          "tts_engine": "TTS engine"
+        }
+      },
+      "language": {
+        "title": "Language",
+        "description": "Choose the speech synthesis language.",
+        "data": {
+          "language": "Language"
+        }
+      },
+      "voice": {
+        "title": "Voice",
+        "description": "Choose the TTS engine voice.",
+        "data": {
+          "voice": "Voice"
+        }
+      },
+      "screen": {
+        "title": "Target screen",
+        "description": "Select the screen where the video will be played (e.g. a Google Nest Hub via cast).",
+        "data": {
+          "screen": "Screen (media player)",
+          "volume_mode": "Volume mode",
+          "day_volume": "Day volume",
+          "night_volume": "Night volume",
+          "mute_during_generation": "Mute during generation",
+          "start_delay": "Delay before the wave starts (s)"
+        }
+      },
+      "visual": {
+        "title": "Video appearance",
+        "description": "Customize the visual rendering of the waveform video.",
+        "data": {
+          "wave_color": "Wave color",
+          "wave_height": "Wave height",
+          "video_width": "Video width",
+          "video_height": "Video height"
+        }
+      }
+    },
+    "error": {
+      "unknown_engine": "This TTS engine could not be found.",
+      "no_engines": "No TTS engine is configured in Home Assistant. Add one (e.g. Piper, Edge TTS) before continuing."
+    },
+    "abort": {
+      "no_engines": "No TTS engine is configured in Home Assistant. Add one (e.g. Piper, Edge TTS) before continuing.",
+      "engine_unavailable": "The selected TTS engine is no longer available.",
+      "already_configured": "This integration is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "engine": {
+        "title": "TTS engine",
+        "description": "Choose the Text-To-Speech engine used to generate the video.",
+        "data": {
+          "tts_engine": "TTS engine"
+        }
+      },
+      "language": {
+        "title": "Language",
+        "description": "Choose the speech synthesis language.",
+        "data": {
+          "language": "Language"
+        }
+      },
+      "voice": {
+        "title": "Voice",
+        "description": "Choose the TTS engine voice.",
+        "data": {
+          "voice": "Voice"
+        }
+      },
+      "screen": {
+        "title": "Target screen",
+        "description": "Select the screen where the video will be played (e.g. a Google Nest Hub via cast).",
+        "data": {
+          "screen": "Screen (media player)",
+          "volume_mode": "Volume mode",
+          "day_volume": "Day volume",
+          "night_volume": "Night volume",
+          "mute_during_generation": "Mute during generation",
+          "start_delay": "Delay before the wave starts (s)"
+        }
+      },
+      "visual": {
+        "title": "Video appearance",
+        "description": "Customize the visual rendering of the waveform video.",
+        "data": {
+          "wave_color": "Wave color",
+          "wave_height": "Wave height",
+          "video_width": "Video width",
+          "video_height": "Video height"
+        }
+      }
+    },
+    "abort": {
+      "no_engines": "No TTS engine is configured in Home Assistant.",
+      "engine_unavailable": "The selected TTS engine is no longer available."
+    }
+  },
+  "entity": {
+    "media_player": {
+      "screen": {
+        "name": "Screen"
+      }
+    }
+  },
+  "services": {
+    "speak": {
+      "name": "Speak",
+      "description": "Generate a waveform video from text and play it on the configured screen.",
+      "fields": {
+        "text": {
+          "name": "Text",
+          "description": "Text to synthesize and display on the screen."
+        },
+        "target": {
+          "name": "Target screen",
+          "description": "Override the configured screen (media_player entity)."
+        }
+      }
+    }
+  }
+}

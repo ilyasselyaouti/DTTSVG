@@ -1,74 +1,83 @@
 ![DTTSVG Banner](dttsvg_banner.png)
 
-# DTTSVG - Domus Text To Speech Video Generator
+# DTTSVG - Text To Speech Video Generator
 
-DTTSVG est un module externe conçu pour **Home Assistant (Container)**. Il génère dynamiquement une vidéo d'onde sonore synchronisée avec votre flux Text-To-Speech (TTS) afin de l'afficher sur un écran connecté (comme le Google Nest Hub) via le protocole Cast.
+DTTSVG est un **custom component Home Assistant** qui génère dynamiquement une vidéo d'onde sonore synchronisée avec n'importe quel moteur Text-To-Speech (TTS) configuré dans Home Assistant, puis la joue sur un écran connecté (comme le Google Nest Hub) via le protocole Cast.
+
+Compatible avec **toutes les versions récentes de Home Assistant** et **tous les moteurs TTS** (Piper, Edge TTS, Google Translate, etc.) : le moteur est choisi dans l'interface de configuration.
+
+---
+
+## ✨ Fonctionnalités
+
+- **Configuration 100% GUI** : Paramètres → Appareils & services → Ajouter une intégration → DTTSVG
+  - Sélection du **moteur TTS** (liste dynamique de tous les moteurs configurés dans HA)
+  - Sélection de la **langue** et de la **voix** selon le moteur
+  - Sélection de l'**écran cible** (entité `media_player`, ex. Nest Hub)
+  - Options : volume jour/nuit, coupure du son pendant la génération, couleur de l'onde, taille vidéo...
+- **Entité `media_player.dttsvg_screen`** : écran virtuel dont l'état reflète l'écran réel ; toutes les commandes (play, pause, stop, volume) sont relayées à l'écran via Cast.
+- **Service `dttsvg.speak`** : génère la vidéo depuis un texte et la joue sur l'écran.
+- **Encodage embarqué (PyAV)** : aucun FFmpeg système requis.
+- Vidéos stockées dans `/media/dttsvg/` (visibles dans le navigateur média).
 
 ---
 
 ## 📋 Prérequis
-* Un serveur avec **Docker** et **Docker Compose** installés.
-* **Home Assistant Container** fonctionnel.
-* Un moteur TTS configuré sur Home Assistant (ex: `tts.piper`).
 
-## 🚀 Installation & Configuration
-
-### 1. Préparation des fichiers
-Téléchargez ou clonez ce dépôt GitHub sur le serveur exécutant votre Home Assistant Container.
-
-### 2. Configuration réseau (Docker)
-Assurez-vous que les conteneurs de DTTSVG peuvent communiquer avec Home Assistant. Si vous utilisez des réseaux Docker spécifiques, modifiez le fichier `docker-compose.yml` pour inclure DTTSVG dans le même réseau que votre instance HA.
-
-### 3. Création du Token Home Assistant
-DTTSVG a besoin d'un accès à l'API de Home Assistant pour récupérer les URL audio.
-1. Dans Home Assistant, cliquez sur votre **Profil** (en bas à gauche).
-2. Allez dans l'onglet **Sécurité**.
-3. Tout en bas, dans la section **Jetons d'accès longue durée**, créez un jeton nommé "DTTSVG".
-4. Copiez ce jeton (il ne sera affiché qu'une seule fois).
-
-### 4. Configuration de `app.py`
-Ouvrez le fichier `app.py` et modifiez la section `--- CONFIGURATION ---` avec vos informations :
-* `HA_URL` : L'URL locale de votre Home Assistant (ex: `http://192.168.1.50:8123`).
-* `HA_TOKEN` : Collez ici le jeton longue durée généré à l'étape précédente.
-* `TTS_ENGINE` : Le nom de votre entité TTS (par défaut `tts.piper`).
-* `PUBLIC_URL` : Remplacez `VOTRE_IP_LOCAL` par l'adresse IP du serveur exécutant DTTSVG (le port `3000` sert à héberger la vidéo finale).
+- Home Assistant **2023.5 ou supérieur** (Container, Core, HAOS...)
+- Au moins un moteur TTS configuré dans Home Assistant (ex : `Piper`, `Edge TTS`)
 
 ---
 
-## ⚙️ Intégration dans Home Assistant
+## 🚀 Installation
 
-### 1. Ajouter la commande REST
-Ouvrez votre fichier `configuration.yaml` dans Home Assistant et ajoutez le bloc suivant. Pensez à remplacer `VOTRE_IP_LOCAL` par l'IP de la machine hébergeant DTTSVG (le port `1240` est utilisé par l'API de génération) :
+### Via HACS (recommandé)
+
+1. Dans HACS → intégrations → menu (⋮) → **Dépôts personnalisés**
+2. Ajoutez `https://github.com/ilyasselyaouti/DTTSVG` avec la catégorie **Intégration**
+3. Recherchez **DTTSVG** dans HACS et installez-le
+4. Redémarrez Home Assistant
+
+### Manuellement
+
+Copiez le dossier `custom_components/dttsvg/` dans le dossier `custom_components/` de votre installation Home Assistant, puis redémarrez.
+
+---
+
+## ⚙️ Configuration
+
+1. Dans Home Assistant, allez dans **Paramètres → Appareils & services → Ajouter une intégration**
+2. Recherchez **DTTSVG**
+3. Suivez l'assistant :
+   - Choisissez le **moteur TTS** à utiliser
+   - Choisissez la **langue** et la **voix**
+   - Sélectionnez l'**écran cible** (votre `media_player.nest_hub` par exemple)
+   - Personnalisez les options (volume jour/nuit, délai, couleur de l'onde, taille...)
+
+Vous pouvez modifier tous ces réglages à tout moment via **Paramètres → Appareils & services → DTTSVG → Options**.
+
+---
+
+## 🎯 Utilisation
+
+### Service `dttsvg.speak`
 
 ```yaml
-rest_command:
-  generer_tts_video:
-    url: "http://VOTRE_IP_LOCAL:1240/generate_tts_video"
-    method: POST
-    headers:
-      content-type: "application/json"
-    payload: '{"text": "{{ text }}"}'
-
+action: dttsvg.speak
+data:
+  text: "Bonjour, je suis prêt !"
 ```
 
-Redémarrez Home Assistant pour appliquer cette configuration.
+Champ optionnel `target` pour remplacer temporairement l'écran configuré :
 
-### 2. Lancer DTTSVG
-
-Dans le dossier contenant `docker-compose.yml`, démarrez l'application avec la commande :
-
-```bash
-docker compose up -d
-
+```yaml
+action: dttsvg.speak
+data:
+  text: "Message sur un autre écran"
+  target: media_player.autre_ecran
 ```
 
----
-
-## 🎯 Utilisation (Script Home Assistant)
-
-Pour utiliser le système, créez un nouveau script dans Home Assistant. Ce script va envoyer le texte à DTTSVG, attendre la génération, puis envoyer la vidéo générée sur votre Nest Hub.
-
-Voici le code YAML à copier dans un nouveau script (remplacez `media_player.nest_hub` par le nom exact de votre entité écran) :
+### Exemple de script
 
 ```yaml
 alias: DTTSVG | Speak
@@ -80,59 +89,42 @@ fields:
     selector:
       text: null
 sequence:
-  - action: media_player.volume_mute
-    metadata: {}
-    target:
-      entity_id: media_player.NEST_HUB
-    data:
-      is_volume_muted: true
-  - action: media_player.turn_on
-    metadata: {}
-    target:
-      entity_id: media_player.NEST_HUB
-    data: {}
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 0
-      milliseconds: 500
-  - action: media_player.volume_mute
-    metadata: {}
-    target:
-      entity_id: media_player.NEST_HUB
-    data:
-      is_volume_muted: false
-  - if:
-      - condition: sun
-        after: sunset
-    then:
-      - action: media_player.volume_set
-        metadata: {}
-        target:
-          entity_id: media_player.NEST_HUB
-        data:
-          volume_level: 0.2
-    else:
-      - action: media_player.volume_set
-        metadata: {}
-        target:
-          entity_id: media_player.NEST_HUB
-        data:
-          volume_level: 0.5
-  - action: rest_command.generer_tts_video
+  - action: dttsvg.speak
     data:
       text: "{{ texte_message }}"
-  - delay: "00:00:01"
-  - action: media_player.play_media
-    target:
-      entity_id: media_player.NEST_HUB
-    data:
-      media:
-        media_content_id: http://YOUR_SERVER_IP:3000/tts_visual.mp4
-        media_content_type: video/mp4
-        metadata: {}
-description: ""
-
 ```
 
-**C'est prêt !** Vous pouvez maintenant tester votre installation en appelant ce script et en lui passant la variable `message : "Bonjour, je suis prêt !"` pour voir l'interface réagir.
+### Entité media player
+
+L'entité `media_player.dttsvg_screen` reflète l'état de l'écran réel (lecture, pause, volume...) et vous permet de :
+- relancer la dernière vidéo générée depuis l'interface (carte media player),
+- envoyer du texte directement depuis une carte média : `media_content_type: text` et `media_content_id: "votre texte"`.
+
+### Événement
+
+À chaque génération, l'événement `dttsvg_video_generated` est déclenché avec les attributs `text`, `url` et `path` (utile pour des automatisations).
+
+---
+
+## 🛠 Dépannage
+
+- **"Aucun moteur TTS configuré"** : ajoutez une intégration TTS dans HA (Paramètres → Voix → Moteurs TTS) avant de configurer DTTSVG.
+- **L'écran ne joue pas la vidéo** : vérifiez que le `media_player` cible est bien en ligne et que la vidéo est accessible (l'URL contient un jeton aléatoire, protégée en lecture seule).
+- **Première installation lente** : Home Assistant installe automatiquement la dépendance PyAV (quelques dizaines de Mo).
+
+---
+
+## 📁 Structure
+
+```
+custom_components/dttsvg/
+├── __init__.py        # Orchestration : TTS → vidéo → cast + service speak
+├── manifest.json      # Métadonnées HACS / HA
+├── config_flow.py     # Menu de configuration GUI
+├── media_player.py    # Entité écran virtuelle
+├── tts_compat.py      # Compatibilité multi-versions du composant TTS
+├── video.py           # Génération vidéo (PyAV, H.264 + AAC)
+├── view.py            # Endpoint de diffusion de la vidéo
+├── translations/      # fr / en
+└── images/            # Icône et logo HACS
+```

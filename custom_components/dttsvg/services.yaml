@@ -1,0 +1,18 @@
+speak:
+  name: Speak
+  description: Generate a text-to-speech waveform video and play it on the configured screen.
+  fields:
+    text:
+      name: Text
+      description: Text to synthesize and display on the screen.
+      required: true
+      example: "Bonjour, je suis prêt !"
+      selector:
+        text: null
+    target:
+      name: Target screen
+      description: Override the configured screen (media_player entity).
+      required: false
+      selector:
+        entity:
+          domain: media_player

@@ -1,0 +1,14 @@
+{
+  "domain": "dttsvg",
+  "name": "DTTSVG - Text To Speech Video Generator",
+  "codeowners": ["@ilyasselyaouti"],
+  "config_flow": true,
+  "dependencies": ["tts", "http"],
+  "documentation": "https://github.com/ilyasselyaouti/DTTSVG",
+  "iot_class": "local_push",
+  "issue_tracker": "https://github.com/ilyasselyaouti/DTTSVG/issues",
+  "requirements": ["av>=11.0.0"],
+  "integration_type": "service",
+  "version": "1.0.0",
+  "homeassistant": "2023.5.0"
+}

@@ -1,0 +1,132 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Moteur TTS",
+        "description": "Choisissez le moteur Text-To-Speech à utiliser pour générer la vidéo. Tous les moteurs TTS configurés dans Home Assistant sont disponibles.",
+        "data": {
+          "tts_engine": "Moteur TTS"
+        }
+      },
+      "language": {
+        "title": "Langue",
+        "description": "Choisissez la langue de synthèse vocale.",
+        "data": {
+          "language": "Langue"
+        }
+      },
+      "voice": {
+        "title": "Voix",
+        "description": "Choisissez la voix du moteur TTS.",
+        "data": {
+          "voice": "Voix"
+        }
+      },
+      "screen": {
+        "title": "Écran cible",
+        "description": "Sélectionnez l'écran sur lequel la vidéo sera jouée (ex: un Google Nest Hub via cast).",
+        "data": {
+          "screen": "Écran (media player)",
+          "volume_mode": "Mode de volume",
+          "day_volume": "Volume de jour",
+          "night_volume": "Volume de nuit",
+          "mute_during_generation": "Couper le son pendant la génération",
+          "start_delay": "Délai avant le début de l'onde (s)"
+        }
+      },
+      "visual": {
+        "title": "Apparence de la vidéo",
+        "description": "Personnalisez le rendu visuel de la vidéo d'onde sonore.",
+        "data": {
+          "wave_color": "Couleur de l'onde",
+          "wave_height": "Hauteur de l'onde",
+          "video_width": "Largeur de la vidéo",
+          "video_height": "Hauteur de la vidéo"
+        }
+      }
+    },
+    "error": {
+      "unknown_engine": "Ce moteur TTS est introuvable.",
+      "no_engines": "Aucun moteur TTS configuré dans Home Assistant. Ajoutez-en un (ex: Piper, Edge TTS) avant de continuer."
+    },
+    "abort": {
+      "no_engines": "Aucun moteur TTS configuré dans Home Assistant. Ajoutez-en un (ex: Piper, Edge TTS) avant de continuer.",
+      "engine_unavailable": "Le moteur TTS sélectionné n'est plus disponible.",
+      "already_configured": "L'intégration est déjà configurée."
+    }
+  },
+  "options": {
+    "step": {
+      "engine": {
+        "title": "Moteur TTS",
+        "description": "Choisissez le moteur Text-To-Speech à utiliser pour générer la vidéo.",
+        "data": {
+          "tts_engine": "Moteur TTS"
+        }
+      },
+      "language": {
+        "title": "Langue",
+        "description": "Choisissez la langue de synthèse vocale.",
+        "data": {
+          "language": "Langue"
+        }
+      },
+      "voice": {
+        "title": "Voix",
+        "description": "Choisissez la voix du moteur TTS.",
+        "data": {
+          "voice": "Voix"
+        }
+      },
+      "screen": {
+        "title": "Écran cible",
+        "description": "Sélectionnez l'écran sur lequel la vidéo sera jouée (ex: un Google Nest Hub via cast).",
+        "data": {
+          "screen": "Écran (media player)",
+          "volume_mode": "Mode de volume",
+          "day_volume": "Volume de jour",
+          "night_volume": "Volume de nuit",
+          "mute_during_generation": "Couper le son pendant la génération",
+          "start_delay": "Délai avant le début de l'onde (s)"
+        }
+      },
+      "visual": {
+        "title": "Apparence de la vidéo",
+        "description": "Personnalisez le rendu visuel de la vidéo d'onde sonore.",
+        "data": {
+          "wave_color": "Couleur de l'onde",
+          "wave_height": "Hauteur de l'onde",
+          "video_width": "Largeur de la vidéo",
+          "video_height": "Hauteur de la vidéo"
+        }
+      }
+    },
+    "abort": {
+      "no_engines": "Aucun moteur TTS configuré dans Home Assistant.",
+      "engine_unavailable": "Le moteur TTS sélectionné n'est plus disponible."
+    }
+  },
+  "entity": {
+    "media_player": {
+      "screen": {
+        "name": "Écran"
+      }
+    }
+  },
+  "services": {
+    "speak": {
+      "name": "Parler",
+      "description": "Génère une vidéo d'onde sonore à partir d'un texte et la joue sur l'écran configuré.",
+      "fields": {
+        "text": {
+          "name": "Texte",
+          "description": "Texte à synthétiser et à afficher sur l'écran."
+        },
+        "target": {
+          "name": "Écran cible",
+          "description": "Remplace l'écran configuré (entité media_player)."
+        }
+      }
+    }
+  }
+}
