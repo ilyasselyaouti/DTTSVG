@@ -7,6 +7,7 @@ via cast) grâce à l'entité media_player « écran » exposée.
 
 from __future__ import annotations
 
+import asyncio
 import logging
 import uuid
 from pathlib import Path
@@ -173,7 +174,6 @@ class DttsvgHub:
             raise HomeAssistantError("Aucun moteur TTS configuré")
 
         target = data.get("target") or options.get(CONF_SCREEN)
-
         screen_entity = self._get_screen_entity()
 
         try:
@@ -181,32 +181,48 @@ class DttsvgHub:
             audio_bytes = await self._generate_audio(text, options)
             path, url = await self._generate_video(audio_bytes, options)
         except (video.VideoGenerationError, ValueError) as err:
+            await self._apply_volume(target, "mute", False, options)
             raise HomeAssistantError(str(err)) from err
-        finally:
-            try:
-                await self._apply_volume(target, "mute", False, options)
-            except Exception:  # pylint: disable=broad-except
-                _LOGGER.debug("Échec de la restauration du volume", exc_info=True)
 
         await self._apply_volume_mode(target, options)
 
-        if screen_entity is not None:
-            await screen_entity.async_play_generated_video(str(path), url)
-        elif target:
-            await self.hass.services.async_call(
-                "media_player",
-                "play_media",
-                {
-                    "entity_id": target,
-                    "media_content_type": "video/mp4",
-                    "media_content_id": url,
-                },
-                blocking=True,
-            )
+        try:
+            await self._play_video(path, url, screen_entity, target)
+            await asyncio.sleep(0.2)
+        finally:
+            await self._apply_volume(target, "mute", False, options)
 
         self.hass.bus.async_fire(
             EVENT_VIDEO_GENERATED,
             {"text": text, "url": url, "path": str(path)},
+        )
+
+    async def _play_video(
+        self,
+        path: Path,
+        url: str,
+        screen_entity: "DttsvgScreen | None",
+        target: str | None,
+    ) -> None:
+        """Lance la vidéo sur l'écran réel (via l'entité virtuelle ou directement)."""
+        if screen_entity is not None:
+            await screen_entity.async_play_generated_video(str(path), url)
+            return
+        if not target:
+            return
+        state = self.hass.states.get(target)
+        if state is None or state.state == "unavailable":
+            _LOGGER.warning("Écran cible introuvable ou indisponible : %s", target)
+            return
+        await self.hass.services.async_call(
+            "media_player",
+            "play_media",
+            {
+                "entity_id": target,
+                "media_content_type": "video/mp4",
+                "media_content_id": url,
+            },
+            blocking=True,
         )
         _LOGGER.info("Vidéo DTTSVG générée et envoyée : %s", url)
 

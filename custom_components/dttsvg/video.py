@@ -163,7 +163,7 @@ def generate_video(
     background = np.asarray(background_img, dtype=np.uint8)
 
     color = _parse_color(wave_color)
-    wave_offset_y = max(0, height - wave_height)
+    wave_offset_y = max(0, (height - wave_height) // 2)
 
     output = av.open(output_path, "w")
 

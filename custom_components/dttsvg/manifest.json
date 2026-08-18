@@ -1,6 +1,6 @@
 {
   "domain": "dttsvg",
-  "name": "DTTSVG - Text To Speech Video Generator",
+  "name": "D.T.T.S.V.G.",
   "codeowners": ["@ilyasselyaouti"],
   "config_flow": true,
   "dependencies": ["tts", "http"],
