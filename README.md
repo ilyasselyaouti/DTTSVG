@@ -1,4 +1,4 @@
-![DTTSVG Banner](banenr.png)
+![DTTSVG Banner](banner.png)
 
 # DTTSVG - Text To Speech Video Generator
 
