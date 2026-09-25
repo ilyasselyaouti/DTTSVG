@@ -17,6 +17,10 @@ CONF_NIGHT_VOLUME = "night_volume"
 CONF_VOLUME_MODE = "volume_mode"
 CONF_START_DELAY = "start_delay"
 CONF_WAVE_SCALE = "wave_scale"
+CONF_BACKUP_SCREEN = "backup_screen"
+CONF_PRIORITY_DEFAULT = "priority_default"
+CONF_DUCK_VOLUME = "duck_volume"
+CONF_PHONE_ROUTING = "phone_routing"
 
 VOLUME_MODE_FIXED = "fixed"
 VOLUME_MODE_DAY_NIGHT = "day_night"
@@ -30,12 +34,19 @@ DEFAULT_MUTE_DURING_GENERATION = True
 DEFAULT_VOLUME_MODE = VOLUME_MODE_FIXED
 DEFAULT_DAY_VOLUME = 0.5
 DEFAULT_NIGHT_VOLUME = 0.2
+DEFAULT_PRIORITY_DEFAULT = False
+DEFAULT_DUCK_VOLUME = 0.15
+DEFAULT_PHONE_ROUTING = True
 
 ATTR_LAST_VIDEO_URL = "last_generated_video_url"
 ATTR_LAST_VIDEO_PATH = "last_generated_video_path"
 ATTR_TARGET_ENTITY = "target_screen_entity"
 
 EVENT_VIDEO_GENERATED = f"{DOMAIN}_video_generated"
+EVENT_PHONE_ANNOUNCEMENT = f"{DOMAIN}_phone_announcement"
+
+PHONE_ACTIVE_EXPIRY = 30
+MAX_QUEUE = 10
 
 MEDIA_DIR = "dttsvg"
 VIDEO_EXTENSION = "mp4"

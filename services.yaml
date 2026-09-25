@@ -16,3 +16,10 @@ speak:
       selector:
         entity:
           domain: media_player
+    priority:
+      name: Priority
+      description: If true, the announcement is played immediately (with ducking of the currently playing media when a backup screen exists). If false, it is queued until the speaker is free.
+      required: false
+      default: false
+      selector:
+        boolean: null

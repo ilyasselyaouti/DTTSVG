@@ -14,7 +14,6 @@ import re
 from typing import Any
 
 import voluptuous as vol
-
 from homeassistant.config_entries import ConfigEntry, ConfigFlow, OptionsFlow
 from homeassistant.core import callback
 from homeassistant.data_entry_flow import FlowResult
@@ -22,10 +21,14 @@ from homeassistant.helpers import selector
 
 from . import tts_compat
 from .const import (
+    CONF_BACKUP_SCREEN,
     CONF_DAY_VOLUME,
+    CONF_DUCK_VOLUME,
     CONF_LANGUAGE,
     CONF_MUTE_DURING_GENERATION,
     CONF_NIGHT_VOLUME,
+    CONF_PHONE_ROUTING,
+    CONF_PRIORITY_DEFAULT,
     CONF_SCREEN,
     CONF_START_DELAY,
     CONF_TTS_ENGINE,
@@ -36,8 +39,11 @@ from .const import (
     CONF_WAVE_COLOR,
     CONF_WAVE_HEIGHT,
     DEFAULT_DAY_VOLUME,
+    DEFAULT_DUCK_VOLUME,
     DEFAULT_MUTE_DURING_GENERATION,
     DEFAULT_NIGHT_VOLUME,
+    DEFAULT_PHONE_ROUTING,
+    DEFAULT_PRIORITY_DEFAULT,
     DEFAULT_START_DELAY,
     DEFAULT_VIDEO_HEIGHT,
     DEFAULT_VIDEO_WIDTH,
@@ -48,7 +54,6 @@ from .const import (
     VOLUME_MODE_DAY_NIGHT,
     VOLUME_MODE_FIXED,
 )
-
 
 _SUPPORTS_DATA_SCHEMA = "data_schema" in inspect.signature(
     ConfigFlow.async_show_form
@@ -78,6 +83,9 @@ def _screen_schema(defaults: dict[str, Any]) -> vol.Schema:
             vol.Required(CONF_SCREEN, default=defaults.get(CONF_SCREEN, vol.UNDEFINED)): selector.EntitySelector(
                 selector.EntitySelectorConfig(domain="media_player")
             ),
+            vol.Optional(
+                CONF_BACKUP_SCREEN, default=defaults.get(CONF_BACKUP_SCREEN, vol.UNDEFINED)
+            ): selector.EntitySelector(selector.EntitySelectorConfig(domain="media_player")),
             vol.Required(
                 CONF_VOLUME_MODE, default=defaults.get(CONF_VOLUME_MODE, DEFAULT_VOLUME_MODE)
             ): selector.SelectSelector(
@@ -116,6 +124,21 @@ def _screen_schema(defaults: dict[str, Any]) -> vol.Schema:
                     min=0.0, max=10.0, step=0.5, mode=selector.NumberSelectorMode.BOX
                 )
             ),
+            vol.Required(
+                CONF_PRIORITY_DEFAULT,
+                default=defaults.get(CONF_PRIORITY_DEFAULT, DEFAULT_PRIORITY_DEFAULT),
+            ): selector.BooleanSelector(),
+            vol.Required(
+                CONF_DUCK_VOLUME, default=defaults.get(CONF_DUCK_VOLUME, DEFAULT_DUCK_VOLUME)
+            ): selector.NumberSelector(
+                selector.NumberSelectorConfig(
+                    min=0.0, max=0.5, step=0.05, mode=selector.NumberSelectorMode.SLIDER
+                )
+            ),
+            vol.Required(
+                CONF_PHONE_ROUTING,
+                default=defaults.get(CONF_PHONE_ROUTING, DEFAULT_PHONE_ROUTING),
+            ): selector.BooleanSelector(),
         }
     )
 
@@ -288,6 +311,8 @@ class DttsvgConfigFlow(ConfigFlow, domain=DOMAIN):
         """Étape 4 : écran cible + options de lecture."""
         schema = _screen_schema(self._data)
         if user_input is not None:
+            if not user_input.get(CONF_BACKUP_SCREEN):
+                user_input.pop(CONF_BACKUP_SCREEN, None)
             self._data.update(user_input)
             return await self.async_step_visual()
 
@@ -415,6 +440,8 @@ class DttsvgOptionsFlow(OptionsFlow):
         """Écran cible + options de lecture."""
         schema = _screen_schema(self._data)
         if user_input is not None:
+            if not user_input.get(CONF_BACKUP_SCREEN):
+                user_input.pop(CONF_BACKUP_SCREEN, None)
             self._data.update(user_input)
             return await self.async_step_visual()
 

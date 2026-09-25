@@ -27,11 +27,15 @@
         "description": "Select the screen where the video will be played (e.g. a Google Nest Hub via cast).",
         "data": {
           "screen": "Screen (media player)",
+          "backup_screen": "Backup screen/speaker (optional)",
           "volume_mode": "Volume mode",
           "day_volume": "Day volume",
           "night_volume": "Night volume",
           "mute_during_generation": "Mute during generation",
-          "start_delay": "Delay before the wave starts (s)"
+          "start_delay": "Delay before the wave starts (s)",
+          "priority_default": "Priority announcements by default",
+          "duck_volume": "Volume of the playing media during a priority announcement",
+          "phone_routing": "Announce on the phone when it is active"
         }
       },
       "visual": {
@@ -83,11 +87,15 @@
         "description": "Select the screen where the video will be played (e.g. a Google Nest Hub via cast).",
         "data": {
           "screen": "Screen (media player)",
+          "backup_screen": "Backup screen/speaker (optional)",
           "volume_mode": "Volume mode",
           "day_volume": "Day volume",
           "night_volume": "Night volume",
           "mute_during_generation": "Mute during generation",
-          "start_delay": "Delay before the wave starts (s)"
+          "start_delay": "Delay before the wave starts (s)",
+          "priority_default": "Priority announcements by default",
+          "duck_volume": "Volume of the playing media during a priority announcement",
+          "phone_routing": "Announce on the phone when it is active"
         }
       },
       "visual": {
@@ -125,6 +133,10 @@
         "target": {
           "name": "Target screen",
           "description": "Override the configured screen (media_player entity)."
+        },
+        "priority": {
+          "name": "Priority",
+          "description": "If true, the announcement is played immediately and the volume of the media currently playing is lowered (ducking) then restored. Otherwise it is queued until the speaker is free."
         }
       }
     }

@@ -27,11 +27,15 @@
         "description": "Sélectionnez l'écran sur lequel la vidéo sera jouée (ex: un Google Nest Hub via cast).",
         "data": {
           "screen": "Écran (media player)",
+          "backup_screen": "Écran / enceinte de backup (optionnel)",
           "volume_mode": "Mode de volume",
           "day_volume": "Volume de jour",
           "night_volume": "Volume de nuit",
           "mute_during_generation": "Couper le son pendant la génération",
-          "start_delay": "Délai avant le début de l'onde (s)"
+          "start_delay": "Délai avant le début de l'onde (s)",
+          "priority_default": "Annonces prioritaires par défaut",
+          "duck_volume": "Volume du média en cours pendant une annonce prioritaire",
+          "phone_routing": "Annoncer sur le téléphone s'il est actif"
         }
       },
       "visual": {
@@ -83,11 +87,15 @@
         "description": "Sélectionnez l'écran sur lequel la vidéo sera jouée (ex: un Google Nest Hub via cast).",
         "data": {
           "screen": "Écran (media player)",
+          "backup_screen": "Écran / enceinte de backup (optionnel)",
           "volume_mode": "Mode de volume",
           "day_volume": "Volume de jour",
           "night_volume": "Volume de nuit",
           "mute_during_generation": "Couper le son pendant la génération",
-          "start_delay": "Délai avant le début de l'onde (s)"
+          "start_delay": "Délai avant le début de l'onde (s)",
+          "priority_default": "Annonces prioritaires par défaut",
+          "duck_volume": "Volume du média en cours pendant une annonce prioritaire",
+          "phone_routing": "Annoncer sur le téléphone s'il est actif"
         }
       },
       "visual": {
@@ -125,6 +133,10 @@
         "target": {
           "name": "Écran cible",
           "description": "Remplace l'écran configuré (entité media_player)."
+        },
+        "priority": {
+          "name": "Prioritaire",
+          "description": "Si vrai, l'annonce est jouée immédiatement et le volume du média en cours est baissé (ducking) puis restauré. Sinon elle est mise en file d'attente jusqu'à ce que l'enceinte soit libre."
         }
       }
     }
